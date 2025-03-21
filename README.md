@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>訓練ページ</title>
+    <title>Loading...</title>
+    <meta http-equiv="refresh" content="0; url=warning.html">
 </head>
 <body>
-    <h1>これは訓練用のページです</h1>
-    <p>このページはフィッシング訓練のために作成されました。</p>
+    <p>自動的に移動しない場合は、<a href="warning.html">こちら</a>をクリックしてください。</p>
 </body>
 </html>
