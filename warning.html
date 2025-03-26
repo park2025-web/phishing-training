@@ -3,17 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚠ 警告！ウイルス感染 ⚠</title>
+    <title>インストール中...</title>
     <style>
         body {
             background-color: black;
-            color: red;
+            color: white;
             font-family: Arial, sans-serif;
             text-align: center;
             padding-top: 100px;
+            margin: 0;
         }
-        .warning {
-            font-size: 32px;
+        #install-text {
+            color: red;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        #progress-container {
+            width: 80%;
+            background-color: gray;
+            height: 30px;
+            margin: 20px auto;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: limegreen;
+            transition: width 0.4s linear;
+        }
+        #warning-screen {
+            display: none;
+            color: red;
+        }
+        .warning-text {
+            font-size: 36px;
             font-weight: bold;
             animation: blink 0.8s infinite alternate;
         }
@@ -21,17 +45,120 @@
             0% { opacity: 1; }
             100% { opacity: 0; }
         }
+        #unlock-container {
+            margin-top: 20px;
+        }
+        input {
+            padding: 10px;
+            font-size: 18px;
+            width: 300px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-left: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: darkred;
+        }
+        #error-message {
+            color: red;
+            font-size: 20px;
+            font-weight: bold;
+            display: none;
+            margin-top: 20px;
+        }
+        #btc-address {
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #222;
+            padding: 10px;
+            display: inline-block;
+            border-radius: 5px;
+            word-break: break-all;
+        }
     </style>
     <script>
         window.onload = function() {
-            setInterval(() => { 
-                alert("⚠ ウイルスに感染しました！ すぐに管理者へ報告してください！"); 
-            }, 5000);
+            let progress = 0;
+            let progressBar = document.getElementById("progress-bar");
+            let progressInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 10) + 5;
+                if (progress > 100) progress = 100;
+                progressBar.style.width = progress + "%";
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(showWarningScreen, 500);
+                }
+            }, 400);
         };
+
+        function showWarningScreen() {
+            document.getElementById("install-screen").style.display = "none";
+            document.getElementById("warning-screen").style.display = "block";
+            startCountdown();
+        }
+
+        function startCountdown() {
+            let timeLeft = 24 * 60 * 60; // 24時間（秒）
+            let countdownElem = document.getElementById("countdown");
+
+            function updateCountdown() {
+                let hours = Math.floor(timeLeft / 3600);
+                let minutes = Math.floor((timeLeft % 3600) / 60);
+                let seconds = timeLeft % 60;
+                countdownElem.textContent =
+                    String(hours).padStart(2, '0') + ":" +
+                    String(minutes).padStart(2, '0') + ":" +
+                    String(seconds).padStart(2, '0');
+
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    setTimeout(updateCountdown, 1000);
+                } else {
+                    document.body.innerHTML = "<h1 style='color: red;'>💀 すべてのデータが削除されました 💀</h1>";
+                }
+            }
+            updateCountdown();
+        }
+
+        function showError() {
+            document.getElementById("error-message").style.display = "block";
+            setTimeout(() => {
+                document.body.innerHTML = "<h1 style='color: red;'>💀 すべてのデータが削除されました 💀</h1>";
+            }, 3000);
+        }
     </script>
 </head>
 <body>
-    <h1 class="warning">⚠ あなたのPCはウイルスに感染しました！</h1>
-    <p>重要なデータが流出する可能性があります。すぐに対応してください！</p>
+    <!-- インストール中の画面 -->
+    <div id="install-screen">
+        <h1 id="install-text">インストール中です...</h1>
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- ランサムウェア警告画面 -->
+    <div id="warning-screen">
+        <h1 class="warning-text">💀 YOUR FILES HAVE BEEN ENCRYPTED 💀</h1>
+        <p>⛔ すべてのデータが暗号化され、アクセスできません。</p>
+        <p>💰 復旧したければ、以下のアドレスに <b>5 BTC</b> を送金せよ：</p>
+        <p id="btc-address">1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55</p>
+        <p>⏳ 残り時間： <span id="countdown">23:59:59</span></p>
+
+        <div id="unlock-container">
+            <input type="text" id="unlock-key" placeholder="復旧キーを入力">
+            <button onclick="showError()">解除</button>
+        </div>
+
+        <p id="error-message">⚠ 無効なキーです。データは削除されます。</p>
+    </div>
 </body>
 </html>
